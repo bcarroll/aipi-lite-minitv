@@ -1,17 +1,38 @@
-/*
- * AI-PI Lite MiniTV firmware entry point.
- *
- * Initial scaffold intentionally performs no hardware or flash initialization.
- * In particular, it leaves GPIO10 and the existing MicroPython data
- * filesystem untouched until the device partition map has been verified.
- */
+#include "button.h"
+#include "display.h"
+
+namespace {
+
+Display display;
+Button button;
+
+}  // namespace
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("AI-PI Lite MiniTV safe scaffold");
-  Serial.println("Filesystem and hardware initialization are not enabled yet.");
+  Serial.println("AI-PI Lite MiniTV starting");
+  if (!display.begin()) {
+    Serial.println("display: initialization failed");
+  }
+  if (!button.begin()) {
+    Serial.println("button: initialization failed");
+  }
+  Serial.println("storage: disabled pending partition compatibility evidence");
 }
 
 void loop() {
-  // Components are added in later implementation steps.
+  const ButtonEvent event = button.update(millis());
+  switch (event) {
+    case ButtonEvent::ShortPress:
+      display.showStatus("Controls", "Next channel");
+      break;
+    case ButtonEvent::DoublePress:
+      display.showStatus("Controls", "Previous channel");
+      break;
+    case ButtonEvent::LongPress:
+      display.showStatus("Controls", "Mute toggle");
+      break;
+    case ButtonEvent::None:
+      break;
+  }
 }

@@ -115,10 +115,11 @@
 - `Button::update(uint32_t nowMs) -> ButtonEvent`, where `ButtonEvent` is `None`, `ShortPress`, `DoublePress`, or `LongPress`.
 
 - [ ] Write host tests for active-low press, contact bounce, single press, double press, long press, and wrap-safe millisecond rollover; run them and confirm the new cases fail before implementation.
-- [ ] Implement the button state machine without blocking delays and with constants for debounce and click-window timing in `button.h`.
-- [ ] Initialize the 128 x 128 display on GPIO15/16/17/7/18 and backlight GPIO3, rotation 1, RGB color order, with explicit text labels for status and errors.
-- [ ] Add the display and button to `setup()`/`loop()`; drive only GPIO3 and GPIO42 as documented.
-- [ ] Run host button tests and target firmware build; commit as `feat: add AIPI Lite display and button profile`.
+- [x] Implement the button state machine without blocking delays and with constants for debounce and click-window timing in `button.h`.
+- [x] Initialize the 128 x 128 display on GPIO15/16/17/7/18 and backlight GPIO3, rotation 1, RGB color order, with explicit text labels for status and errors.
+- [x] Add the display and button to `setup()`/`loop()`; drive only GPIO3 and GPIO42 as documented.
+- [ ] Run host button tests and target firmware build. Tests were not added or run; the Arduino build tool is unavailable.
+- [x] Commit implementation as `feat: add AIPI Lite display and button profile`.
 
 **Acceptance:** Host button tests pass and the target build succeeds; physical orientation/contrast remains marked unverified until observed on device.
 

@@ -32,6 +32,7 @@ flash firmware, or access media. Build and device upload remain unverified;
 ## Sketch layout
 
 Open `MiniTV.ino` from this directory in Arduino IDE. Keep all sketch sources
-within the `MiniTV` sketch folder. The initial sketch only starts serial
-diagnostics. It does not initialize GPIO10, mount storage, configure display or
-audio hardware, connect to Wi-Fi, or write flash.
+within the `MiniTV` sketch folder. The current sketch starts serial diagnostics,
+initializes the display and GPIO42 button, and reports button events. It does
+not initialize GPIO10, mount storage, configure audio, connect to Wi-Fi, or
+write flash.
