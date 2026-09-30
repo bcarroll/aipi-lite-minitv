@@ -47,6 +47,12 @@ embedded in firmware and are not installed or downloaded by the script:
 - yt-dlp is optional and must be installed separately on the desktop `PATH`
   for URL download followed by conversion.
 
+The root Dockerfile packages the command-line converter with Python 3.12.14,
+FFmpeg from the Debian Bookworm package repository, and the pinned
+`yt-dlp[default]` version `2026.08.19`. The apt FFmpeg package follows the
+repository state when the image is built; rebuild the image to receive package
+updates.
+
 ## Approval record
 
 Approval covers only the listed versions and licenses. It does not establish

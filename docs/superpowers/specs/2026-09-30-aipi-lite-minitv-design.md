@@ -173,4 +173,6 @@ optionally uses an independently installed yt-dlp for URL downloads. The
 AI-PI Lite 128 x 128, 16 kHz output profile is provisional until actual
 playback is validated. The utility does not access, mount, or modify the
 device filesystem; generated channel folders are staged on the desktop for
-transfer.
+transfer. A headless CLI mode is packaged in the repository Docker image with
+Python, FFmpeg, and the pinned yt-dlp dependency; local input is mounted
+read-only and converted output is written to a separate host-mounted folder.

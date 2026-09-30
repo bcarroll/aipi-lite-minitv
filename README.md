@@ -81,11 +81,94 @@ The player lineage begins with [DynaMight1124's ESP32-MiniTV-Player](https://git
 
 Desktop conversion is an accepted way to prepare media, including videos obtained from YouTube. [DynaMight1124's MiniTV-Video-Converter](https://github.com/DynaMight1124/MiniTV-Video-Converter) can batch-convert common desktop video formats into the upstream MiniTV file layout, with options for target screen and audio format, and its README describes a YouTube URL conversion workflow. Transfer its resulting paired files into the AI-PI Lite data drive for local playback. Treat its presets as starting points: the AI-PI Lite's 128 x 128 display and 16 kHz codec path need a separately verified encoding profile. A YouTube watch URL is not itself a direct media stream supported by the device playlist.
 
-This repository includes a repo-native desktop utility at [`tools/minitv_converter.py`](tools/minitv_converter.py), compatible with the MiniTV file layout. Run it with Python 3.10 or newer and Tk support using `python3 tools/minitv_converter.py`; it also requires FFmpeg available on `PATH`. Optional URL downloads require `yt-dlp` available on `PATH`; the script does not download or update either executable. Choose the AI-PI Lite profile to create numbered channel folders with paired `.mjpeg` and 16 kHz mono `.mp3` files. That profile is an initial encoding target and still needs playback verification on the board. Choose the existing `/Videos` data-drive directory as output only after confirming it is mounted and accessible from the desktop; otherwise use a staging folder and transfer the generated numbered folders later. Existing outputs are skipped rather than overwritten.
+This repository includes a repo-native desktop utility at [`tools/minitv_converter.py`](tools/minitv_converter.py), compatible with the MiniTV file layout. Choose the AI-PI Lite profile to create numbered channel folders with paired `.mjpeg` and 16 kHz mono `.mp3` files. That profile is an initial encoding target and still needs playback verification on the board. Choose the existing `/Videos` data-drive directory as output only after confirming it is mounted and accessible from the desktop; otherwise use a staging folder and transfer the generated numbered folders later. Existing outputs are skipped rather than overwritten.
+
+### Desktop setup
+
+The desktop GUI requires Python 3.10 or newer with Tk support and FFmpeg on
+`PATH`. Python's standard library supplies the GUI and conversion driver; there
+are no required pip packages for converting local files. Test Tk support with
+`python3 -m tkinter`. Install FFmpeg using your operating system's package
+manager, or follow the [FFmpeg download page](https://ffmpeg.org/download.html)
+for executable builds, then confirm `ffmpeg -version` works in a new terminal.
+
+Optional URL downloads use yt-dlp. Create a virtual environment, activate it,
+and install the pinned optional Python package:
+
+macOS or Linux:
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r tools/requirements-converter.txt
+python tools/minitv_converter.py
+```
+
+Windows PowerShell:
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r tools/requirements-converter.txt
+python -m tkinter
+python tools\minitv_converter.py
+```
+
+The `yt-dlp[default]` package is pinned in
+[`tools/requirements-converter.txt`](tools/requirements-converter.txt). See
+the [yt-dlp installation guide](https://github.com/yt-dlp/yt-dlp/wiki/Installation)
+for non-pip installation options. Local conversion does not require yt-dlp.
+On macOS, `brew install ffmpeg` installs FFmpeg with Homebrew; on Debian or
+Ubuntu, use `sudo apt-get update && sudo apt-get install ffmpeg`. On Windows,
+install a build linked from the [FFmpeg download page](https://ffmpeg.org/download.html)
+and add its `bin` directory to `PATH`.
+
+### Docker setup
+
+The root [`Dockerfile`](Dockerfile) builds a headless converter image containing
+Python, FFmpeg, and the pinned yt-dlp package. It does not need Python, FFmpeg,
+yt-dlp, or Tk on the host. Docker mode accepts local video folders or a URL
+through the same script's command-line interface.
+
+```sh
+mkdir -p media converted
+docker build -t aipi-lite-minitv-converter .
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -v "$PWD/media:/input:ro" \
+  -v "$PWD/converted:/output" \
+  aipi-lite-minitv-converter \
+  --input /input --output /output --profile aipi-lite
+```
+
+The input mount is read-only. Numbered output folders are written to `converted`.
+To download and convert one HTTP(S) URL, mount the output folder and run:
+
+```sh
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -v "$PWD/converted:/output" \
+  aipi-lite-minitv-converter \
+  --url "https://example.org/video" --output /output --profile aipi-lite
+```
+
+On Windows PowerShell, omit the `--user` option and use host paths like this:
+
+```powershell
+docker run --rm `
+  -v "${PWD}/media:/input:ro" `
+  -v "${PWD}/converted:/output" `
+  aipi-lite-minitv-converter `
+  --input /input --output /output --profile aipi-lite
+```
+
+Add FFmpeg or yt-dlp only to the Dockerfile or requirements file when changing
+the pinned image environment.
 
 ## Verification status
 
 The converter passed a Python syntax compilation check and `git diff --check`.
-No converter runtime test, host test, or Arduino target build has been run, and
-no device has been flashed or accessed. See the implementation plan at
+No Docker image build, converter runtime test, host test, or Arduino target
+build has been run, and no device has been flashed or accessed. See the
+implementation plan at
 [`docs/superpowers/plans/2026-09-30-aipi-lite-minitv.md`](docs/superpowers/plans/2026-09-30-aipi-lite-minitv.md).

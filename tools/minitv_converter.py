@@ -2,18 +2,21 @@
 
 from __future__ import annotations
 
+import argparse
 import os
 import queue
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
-import tkinter as tk
 from dataclasses import dataclass
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 from urllib.parse import urlsplit
+
+if TYPE_CHECKING:
+    import tkinter as tk
 
 
 VIDEO_SUFFIXES = {".avi", ".mkv", ".mp4", ".webm", ".mov"}
@@ -22,6 +25,21 @@ PROFILES = {
     "MiniTV 288 x 240": (288, 240, 30, 44100),
     "CYD 320 x 240": (320, 240, 24, 44100),
 }
+CLI_PROFILES = {
+    "aipi-lite": "AI-PI Lite 128 x 128 (experimental)",
+    "minitv": "MiniTV 288 x 240",
+    "cyd": "CYD 320 x 240",
+}
+
+
+class ConsoleEvents:
+    """Print worker events immediately when conversions run without a GUI."""
+
+    def put(self, event: tuple[str, str]) -> None:
+        """Write progress log events to standard output."""
+        kind, value = event
+        if kind == "log":
+            print(value, flush=True)
 
 
 @dataclass(frozen=True)
@@ -41,6 +59,7 @@ class MiniTVConverter:
 
     def __init__(self, root: tk.Tk) -> None:
         """Initialize the desktop interface and background-work state."""
+        _load_tkinter()
         self.root = root
         self.root.title("MiniTV Video Converter")
         self.root.minsize(620, 520)
@@ -59,6 +78,17 @@ class MiniTVConverter:
         self.ffmpeg_path = "ffmpeg"
         self._build_interface()
         self.root.after(100, self._poll_events)
+
+    @classmethod
+    def _create_headless(cls, ffmpeg_path: str) -> MiniTVConverter:
+        """Create a conversion worker without initializing any Tk widgets."""
+        converter = cls.__new__(cls)
+        converter.events = ConsoleEvents()
+        converter.stop_event = threading.Event()
+        converter.process_lock = threading.Lock()
+        converter.process = None
+        converter.ffmpeg_path = ffmpeg_path
+        return converter
 
     def _build_interface(self) -> None:
         """Build labeled controls, status text, and a keyboard-friendly log."""
@@ -316,12 +346,84 @@ class MiniTVConverter:
         self.root.after(100, self._poll_events)
 
 
-def main() -> None:
-    """Start the MiniTV converter desktop application."""
+def _load_tkinter() -> None:
+    """Load optional desktop GUI modules when the graphical interface is used."""
+    global tk, filedialog, messagebox, ttk
+    import tkinter as tk_module
+    from tkinter import filedialog as filedialog_module
+    from tkinter import messagebox as messagebox_module
+    from tkinter import ttk as ttk_module
+
+    tk = tk_module
+    filedialog = filedialog_module
+    messagebox = messagebox_module
+    ttk = ttk_module
+
+
+def _parse_args() -> argparse.Namespace:
+    """Parse command-line options for headless and Docker use."""
+    parser = argparse.ArgumentParser(description="Convert source videos to numbered MiniTV channel folders.")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--input", type=Path, help="folder containing supported local video files")
+    source.add_argument("--url", help="HTTP(S) video URL; requires yt-dlp")
+    parser.add_argument("--output", type=Path, help="existing folder where numbered channels are created")
+    parser.add_argument("--profile", choices=CLI_PROFILES, default="aipi-lite", help="encoding preset (default: aipi-lite)")
+    parser.add_argument("--fps", type=int, help="override preset frame rate")
+    parser.add_argument("--quality", type=int, default=8, help="MJPEG quality from 2 (best) to 31 (smallest; default 8)")
+    parser.add_argument("--gain-db", type=float, default=-8, help="audio gain from -30 to 12 dB (default -8)")
+    return parser.parse_args()
+
+
+def _run_cli(args: argparse.Namespace) -> int:
+    """Run a headless local-folder or URL conversion and return its exit code."""
+    if args.input is None and args.url is None:
+        return -1
+    if args.output is None or not args.output.is_dir():
+        raise ValueError("--output must name an existing output folder.")
+    title = CLI_PROFILES[args.profile]
+    width, height, default_fps, audio_rate = PROFILES[title]
+    fps = args.fps if args.fps is not None else default_fps
+    options = ConversionOptions(width, height, fps, audio_rate, args.quality, args.gain_db)
+    if not 1 <= options.fps <= 60:
+        raise ValueError("FPS must be between 1 and 60.")
+    if not 2 <= options.quality <= 31:
+        raise ValueError("JPEG quality must be between 2 and 31.")
+    if not -30 <= options.volume_db <= 12:
+        raise ValueError("Audio gain must be between -30 dB and 12 dB.")
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        raise ValueError("FFmpeg was not found on PATH.")
+    converter = MiniTVConverter._create_headless(ffmpeg)
+    if args.input is not None:
+        if not args.input.is_dir():
+            raise ValueError("--input must name an existing source folder.")
+        converter._convert_folder(args.input, args.output, options)
+        return 0
+    parsed_url = urlsplit(args.url)
+    if parsed_url.scheme not in {"http", "https"} or not parsed_url.netloc:
+        raise ValueError("--url must be a complete HTTP or HTTPS URL.")
+    ytdlp = shutil.which("yt-dlp")
+    if ytdlp is None:
+        raise ValueError("yt-dlp was not found on PATH. Install it or use the Docker image.")
+    converter._download_and_convert(ytdlp, args.url, args.output, options)
+    return 0
+
+
+def main() -> int:
+    """Start the GUI or run the converter's headless command-line mode."""
+    args = _parse_args()
+    if args.input is not None or args.url is not None:
+        try:
+            return _run_cli(args)
+        except (OSError, RuntimeError, ValueError) as error:
+            print(f"Error: {error}", file=sys.stderr)
+            return 1
+    _load_tkinter()
     root = tk.Tk()
     MiniTVConverter(root)
     root.mainloop()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
