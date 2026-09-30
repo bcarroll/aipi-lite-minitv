@@ -79,6 +79,8 @@ The player lineage begins with [DynaMight1124's ESP32-MiniTV-Player](https://git
 
 [nickm324's ESP32-CYD-MiniTV](https://github.com/nickm324/ESP32-CYD-MiniTV) builds on that player and adds the Wi-Fi dashboard, uploads, settings, diagnostics, and OTA workflow. It also remains CYD and microSD oriented. This port keeps those projects as behavioral references while adapting storage to the existing MicroPython data drive and hardware to the AI-PI Lite's ST7735-compatible display and ES8311 codec.
 
+For preparing media, [DynaMight1124's MiniTV-Video-Converter](https://github.com/DynaMight1124/MiniTV-Video-Converter) can batch-convert common desktop video formats into the upstream MiniTV file layout, with options for target screen and audio format. Treat its presets as starting points: the AI-PI Lite's 128 x 128 display and 16 kHz codec path need a separately verified encoding profile. A downloaded YouTube video can be converted as a local file; that does not make a YouTube watch URL a direct stream supported by this firmware.
+
 ## Verification status
 
 Only source review and `git diff --check` have been performed in this workspace.

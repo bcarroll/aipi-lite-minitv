@@ -149,6 +149,14 @@ accessibility criteria; do not claim certification without a formal audit.
   builds on that player with the Wi-Fi dashboard, uploads, settings,
   diagnostics, and OTA workflow. It remains targeted at CYD/microSD hardware
   and classic ESP32 APIs, so its management features need adaptation too.
+- [DynaMight1124's MiniTV-Video-Converter](https://github.com/DynaMight1124/MiniTV-Video-Converter)
+  is a desktop media-preparation reference that converts common source video
+  files into MiniTV-style channel folders and paired assets, with screen and
+  audio-format options. Its presets are not established for the AI-PI Lite's
+  128 x 128 display or 16 kHz codec path; define and verify a target profile
+  before documenting recommended encodings. Its YouTube URL input is a
+  conversion workflow, not evidence that the device can play YouTube watch
+  pages directly.
 - AIPI Lite pins and component assumptions come from the supplied
   `SPEC.md` and existing AI-PI Lite firmware sources.
 
