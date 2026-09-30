@@ -225,7 +225,7 @@
 - `POST /api/upload` accepts a bounded MJPEG/MP3 upload only when writable filesystem compatibility has been proven.
 
 - [ ] Write API policy tests for unknown action, invalid channel, out-of-range volume/brightness, oversized upload, path traversal, and secret redaction; confirm they fail before server implementation.
-- [ ] Build semantic HTML with labeled controls, keyboard navigation, visible focus, contrast-safe styles, and `aria-live` text updates; do not use color as the only state signal.
+- [x] Build semantic HTML with labeled controls, keyboard navigation, visible focus, contrast-safe styles, and `aria-live` text updates; do not use color as the only state signal.
 - [ ] Add Python standard-library accessibility tests with docstrings on every generated Python method; check form labels, button names, focus styles, and text status in `web_ui.h`.
 - [ ] Implement local playback/status, channel list/rename/reorder/delete, brightness/volume, sleep/restart routes, and bounded uploads; channel deletion requires explicit confirmation and must not delete files until the confirmation action is received.
 - [ ] Save playlist/settings changes with a temporary file, flush/close, and atomic rename; preserve the prior file if a write or rename fails.
