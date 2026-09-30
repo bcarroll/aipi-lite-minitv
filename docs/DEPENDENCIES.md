@@ -37,6 +37,16 @@ The following are not proposed as separately installed production libraries:
 - Host-side tests should use the repository's existing compiler and Python
   standard library; no test-only production dependency is proposed.
 
+## Optional desktop media tools
+
+These executables are used only by `tools/minitv_converter.py`; they are not
+embedded in firmware and are not installed or downloaded by the script:
+
+- FFmpeg must be installed separately and available on the desktop `PATH` for
+  local conversion.
+- yt-dlp is optional and must be installed separately on the desktop `PATH`
+  for URL download followed by conversion.
+
 ## Approval record
 
 Approval covers only the listed versions and licenses. It does not establish

@@ -154,6 +154,7 @@
 - Create: `firmware/MiniTV/media_source.cpp`
 - Create: `firmware/MiniTV/audio_codec.h`
 - Create: `firmware/MiniTV/audio_codec.cpp`
+- Create: `tools/minitv_converter.py`
 - Create: `firmware/MiniTV/playback.h`
 - Create: `firmware/MiniTV/playback.cpp`
 - Create: `tests/host/test_media_catalog.cpp`
@@ -174,7 +175,8 @@
 - [x] Add the ES8311 output register sequence and I2C/I2S setup using the existing AIPI Lite evidence: GPIO4/5 I2C, GPIO11/12/14 I2S. Leave GPIO6 MCLK unused because the known 16 kHz sequence derives codec clock from BCLK. Keep GPIO9 disabled until codec init succeeds and gate output to active, unmuted playback.
 - [ ] Decode MJPEG frames to the 128 x 128 display and MP3 audio through ES8311, keeping decode/read buffers in PSRAM where supported; use GPIO42 short/double/long events for channel navigation and mute.
 - [ ] Run host catalog tests and firmware build; on physical hardware verify one prepared local MJPEG/MP3 pair, visible error behavior, and audible output before marking playback complete. Tests and device playback were not run in this turn.
-- [x] Document the media folder structure and relay requirement in `README.md`; media conversion commands and recovery steps remain pending.
+- [x] Add `tools/minitv_converter.py` for desktop MJPEG/MP3 conversion into numbered channel folders; FFmpeg is required on PATH, and optional yt-dlp URL downloads require yt-dlp on PATH. Its AI-PI Lite output profile remains provisional until device playback is verified.
+- [x] Document the media folder structure, converter usage, and relay requirement in `README.md`; recovery steps remain pending.
 - [x] Commit the local scan/read layer and ES8311/I2S driver in separate feature commits.
 
 **Acceptance:** Host tests pass and the firmware build succeeds. Local playback is considered hardware-verified only after the device displays frames and produces audible output without filesystem damage.

@@ -166,3 +166,11 @@ use the upstream task split as a concurrency reference, while implementing
 AI-PI Lite display, ES8311 audio, data-drive access, and network streaming
 against their own verified interfaces. No upstream SD mount or board profile
 is carried over unchanged.
+
+Desktop media preparation is provided by the repo-native
+`tools/minitv_converter.py`. It uses FFmpeg from the desktop PATH and
+optionally uses an independently installed yt-dlp for URL downloads. The
+AI-PI Lite 128 x 128, 16 kHz output profile is provisional until actual
+playback is validated. The utility does not access, mount, or modify the
+device filesystem; generated channel folders are staged on the desktop for
+transfer.

@@ -81,9 +81,11 @@ The player lineage begins with [DynaMight1124's ESP32-MiniTV-Player](https://git
 
 Desktop conversion is an accepted way to prepare media, including videos obtained from YouTube. [DynaMight1124's MiniTV-Video-Converter](https://github.com/DynaMight1124/MiniTV-Video-Converter) can batch-convert common desktop video formats into the upstream MiniTV file layout, with options for target screen and audio format, and its README describes a YouTube URL conversion workflow. Transfer its resulting paired files into the AI-PI Lite data drive for local playback. Treat its presets as starting points: the AI-PI Lite's 128 x 128 display and 16 kHz codec path need a separately verified encoding profile. A YouTube watch URL is not itself a direct media stream supported by the device playlist.
 
+This repository includes a repo-native desktop utility at [`tools/minitv_converter.py`](tools/minitv_converter.py), compatible with the MiniTV file layout. Run it with Python 3.10 or newer and Tk support using `python3 tools/minitv_converter.py`; it also requires FFmpeg available on `PATH`. Optional URL downloads require `yt-dlp` available on `PATH`; the script does not download or update either executable. Choose the AI-PI Lite profile to create numbered channel folders with paired `.mjpeg` and 16 kHz mono `.mp3` files. That profile is an initial encoding target and still needs playback verification on the board. Choose the existing `/Videos` data-drive directory as output only after confirming it is mounted and accessible from the desktop; otherwise use a staging folder and transfer the generated numbered folders later. Existing outputs are skipped rather than overwritten.
+
 ## Verification status
 
-Only source review and `git diff --check` have been performed in this workspace.
-No host tests or Arduino target build have been run, and no device has been
-flashed or accessed. See the implementation plan at
+The converter passed a Python syntax compilation check and `git diff --check`.
+No converter runtime test, host test, or Arduino target build has been run, and
+no device has been flashed or accessed. See the implementation plan at
 [`docs/superpowers/plans/2026-09-30-aipi-lite-minitv.md`](docs/superpowers/plans/2026-09-30-aipi-lite-minitv.md).
