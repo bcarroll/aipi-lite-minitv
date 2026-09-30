@@ -171,10 +171,11 @@
 - [ ] Write media catalog tests for matching pairs, missing audio/video, duplicate names, invalid paths, empty channel folders, and random selection; run them and confirm they fail before implementation.
 - [x] Implement local catalog scanning under `/Videos/`; accept only numeric channel folders and optional `random`, paired `.mjpeg`/`.mp3` files, and bounded catalog capacity.
 - [x] Implement `MediaSource` over an injected filesystem using reads capped to 4096 bytes and reject traversal paths. The caller still cannot obtain a filesystem until compatibility is resolved.
-- [ ] Configure GPIO4/5 ES8311 control and GPIO6/11/12/13/14 I2S from the existing AIPI Lite register evidence; keep GPIO9 amplifier disabled until codec init succeeds and disable it on every exit.
+- [x] Add the ES8311 output register sequence and I2C/I2S setup using the existing AIPI Lite evidence: GPIO4/5 I2C, GPIO11/12/14 I2S. Leave GPIO6 MCLK unused because the known 16 kHz sequence derives codec clock from BCLK. Keep GPIO9 disabled until codec init succeeds and gate output to active, unmuted playback.
 - [ ] Decode MJPEG frames to the 128 x 128 display and MP3 audio through ES8311, keeping decode/read buffers in PSRAM where supported; use GPIO42 short/double/long events for channel navigation and mute.
 - [ ] Run host catalog tests and firmware build; on physical hardware verify one prepared local MJPEG/MP3 pair, visible error behavior, and audible output before marking playback complete. Tests and device playback were not run in this turn.
-- [x] Document the media folder structure and relay requirement in `README.md`; media conversion commands and recovery steps remain pending. Commit the local scan/read layer.
+- [x] Document the media folder structure and relay requirement in `README.md`; media conversion commands and recovery steps remain pending.
+- [x] Commit the local scan/read layer and ES8311/I2S driver in separate feature commits.
 
 **Acceptance:** Host tests pass and the firmware build succeeds. Local playback is considered hardware-verified only after the device displays frames and produces audible output without filesystem damage.
 

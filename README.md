@@ -25,8 +25,11 @@ order follow the existing AI-PI Lite MicroPython implementation, but physical
 orientation and color have not been observed on the device.
 
 GPIO10 is reserved for board power control and is never initialized by this
-firmware. Audio pins are documented in `aipi_lite_profile.h`; audio hardware
-is not initialized.
+firmware. The ES8311 driver uses the existing AI-PI Lite 16 kHz, 16-bit I2S
+register sequence and keeps the GPIO9 amplifier gate low until playback is
+active. The MCLK pin (GPIO6) is left unused because this sequence derives the
+codec clock from BCLK. Audio playback is not yet integrated with the media
+player; physical codec operation is unverified.
 
 ## Playlist format
 
