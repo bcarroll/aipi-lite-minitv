@@ -6,7 +6,7 @@
 
 **Architecture:** Build a native ESP32-S3 application with separate AIPI Lite hardware, filesystem, media-source, playback, playlist, and web-management modules. First establish safe read-only access to the current MicroPython data partition; add writes only after a verified compatible mount is demonstrated. Deliver local playback before HTTP streaming, management pages, and maintenance functions.
 
-**Tech Stack:** ESP32-S3 Arduino core 2.0.17 as used by the upstream firmware; C++ firmware; upstream decoder candidates Arduino_GFX 1.6.0, JPEGDEC, and libhelix 0.8.1; ESP-IDF FAT/VFS support only if verified compatible with the MicroPython partition; host-side C++ tests plus Python standard-library tests for web-asset accessibility.
+**Tech Stack:** ESP32-S3 Arduino core 2.0.17 as used by the upstream firmware; C++ firmware; proposed production dependencies Arduino_GFX 1.6.0, JPEGDEC 1.8.4, minimp3 at a reviewed commit, and ArduinoJson 7.4.3 (pending user approval); ESP-IDF filesystem support only if verified compatible with the MicroPython partition; host-side C++ tests plus Python standard-library tests for web-asset accessibility.
 
 **Spec:** `docs/superpowers/specs/2026-09-30-aipi-lite-minitv-design.md`
 
@@ -56,11 +56,11 @@
 **Interfaces:**
 - Produces: a record of the MicroPython build/version, partition table layout, filesystem type, filesystem start/size, and evidence source; later storage code must use these recorded values and no guessed offset.
 
-- [ ] Inspect the AIPI Lite firmware installation instructions and the exact MicroPython `ESP32_GENERIC_S3-SPIRAM_OCT` partition definition without writing to the board.
-- [ ] Record which partition contains the data filesystem, its format, size, and whether native Arduino/ESP-IDF FAT VFS can mount it without formatting.
-- [ ] If local firmware sources do not establish these facts, document the needed read-only partition-table/flash inspection and stop this task before any device write.
-- [ ] Record `UNKNOWN` only for hardware evidence that cannot be obtained without the physical device; do not infer mount compatibility from the partition name.
-- [ ] Commit the evidence record with `docs: record AIPI Lite filesystem compatibility`.
+- [x] Inspect the AIPI Lite firmware installation instructions and available MicroPython `ESP32_GENERIC_S3-SPIRAM_OCT` partition evidence without writing to the board.
+- [x] Record which facts about the current filesystem and native mount are unknown, rather than infer them from a partition name.
+- [x] Where local firmware sources do not establish these facts, document the needed read-only partition-table/flash inspection and stop before any device write.
+- [x] Record `UNKNOWN` for hardware evidence that cannot be obtained without the physical device; do not infer mount compatibility from the partition name.
+- [x] Commit the evidence record with `docs: record AIPI Lite filesystem compatibility`.
 
 **Acceptance:** The storage format and bounds are known from authoritative build evidence or clearly marked unverified, and no board flash/filesystem write occurred.
 
@@ -72,11 +72,11 @@
 **Interfaces:**
 - Produces: a dependency table naming package, version, purpose, license, and source; firmware setup may proceed only after user approval of each required new production dependency.
 
-- [ ] Record the upstream candidates: Arduino ESP32 core 2.0.17, Arduino_GFX 1.6.0, JPEGDEC at an exact reviewed release/commit, and libhelix 0.8.1.
-- [ ] Identify which candidates can be replaced by code already included in the Arduino/ESP32 core and which are required for supported MJPEG/MP3 playback.
-- [ ] Verify each candidate's source, license, ESP32-S3 support, and pinned release before proposing it.
-- [ ] Add the exact proposed list and whether each package is production or build/test-only to `docs/DEPENDENCIES.md`; do not add package declarations, downloads, or vendored code yet.
-- [ ] Present the concrete dependency list for user approval; continue with dependency-free documentation or host design only until approval is received.
+- [x] Record the exact proposed Arduino ESP32 core, graphics, JPEG, MP3, and JSON dependencies in `docs/DEPENDENCIES.md`; replace the upstream Helix candidate with minimp3 pending licensing/performance review.
+- [x] Identify which capabilities come from the Arduino/ESP32 core and which require standalone libraries.
+- [x] Record the source, license, target notes, and exact pin proposed for each library.
+- [x] Add the exact proposed production list to `docs/DEPENDENCIES.md`; do not add package declarations, downloads, or vendored code yet.
+- [ ] Obtain user approval for the concrete dependency list before proceeding to dependency-adding work.
 
 **Acceptance:** The user has approved the exact production dependencies and versions before any is added to a manifest or firmware build.
 
