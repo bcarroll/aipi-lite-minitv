@@ -73,6 +73,12 @@ The user-approved dependency pins and their licenses are listed in
 the ESP32-S3 toolchain. Do not choose a partition scheme for installation
 until the device's existing partition map and filesystem have been inspected.
 
+## Upstream basis
+
+The player lineage begins with [DynaMight1124's ESP32-MiniTV-Player](https://github.com/DynaMight1124/ESP32-MiniTV-Player), which provides the button-driven channel model, MJPEG/MP3 pairing, random playback, and separate audio and video task structure. Its documented hardware profiles use an SD card and either an ST7789 display with external I2S audio or a CYD ILI9341 with the classic ESP32 DAC. Its SD-specific access and hardware profiles do not fit the AI-PI Lite directly.
+
+[nickm324's ESP32-CYD-MiniTV](https://github.com/nickm324/ESP32-CYD-MiniTV) builds on that player and adds the Wi-Fi dashboard, uploads, settings, diagnostics, and OTA workflow. It also remains CYD and microSD oriented. This port keeps those projects as behavioral references while adapting storage to the existing MicroPython data drive and hardware to the AI-PI Lite's ST7735-compatible display and ES8311 codec.
+
 ## Verification status
 
 Only source review and `git diff --check` have been performed in this workspace.

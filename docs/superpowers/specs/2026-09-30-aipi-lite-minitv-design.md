@@ -139,9 +139,21 @@ accessibility criteria; do not claim certification without a formal audit.
 
 ## Upstream Reference
 
-- Nick M.'s [ESP32-CYD-MiniTV](https://github.com/nickm324/ESP32-CYD-MiniTV)
-  provides the Wi-Fi-managed MiniTV feature set and channel/media workflow.
-- Its README describes the tested CYD hardware, MJPEG/MP3 media pairing, Wi-Fi
-  dashboard, local uploads, and its classic-ESP32/CYD limitations.
+- [DynaMight1124's ESP32-MiniTV-Player](https://github.com/DynaMight1124/ESP32-MiniTV-Player)
+  is the button-driven playback base: numbered and random channels, MJPEG with
+  paired MP3/AAC audio, and separate audio and video task modules. Its supplied
+  board profiles target SD storage, an ST7789 plus external I2S DAC, or a CYD
+  ILI9341 plus classic ESP32 internal DAC. The MiniTV media/channel behavior
+  transfers conceptually, but the SD access and hardware drivers do not.
+- [nickm324's ESP32-CYD-MiniTV](https://github.com/nickm324/ESP32-CYD-MiniTV)
+  builds on that player with the Wi-Fi dashboard, uploads, settings,
+  diagnostics, and OTA workflow. It remains targeted at CYD/microSD hardware
+  and classic ESP32 APIs, so its management features need adaptation too.
 - AIPI Lite pins and component assumptions come from the supplied
   `SPEC.md` and existing AI-PI Lite firmware sources.
+
+Implementation consequence: retain compatible MJPEG/MP3 media semantics and
+use the upstream task split as a concurrency reference, while implementing
+AI-PI Lite display, ES8311 audio, data-drive access, and network streaming
+against their own verified interfaces. No upstream SD mount or board profile
+is carried over unchanged.
