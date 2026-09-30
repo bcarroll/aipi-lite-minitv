@@ -1,6 +1,6 @@
 # AI-PI Lite MiniTV Port Design
 
-**Status:** Approved design, awaiting document review  
+**Status:** Approved and reviewed by the user
 **Date:** 2026-09-30
 
 ## Goal
