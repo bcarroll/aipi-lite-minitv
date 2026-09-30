@@ -169,12 +169,12 @@
 - `PlaybackController::begin() -> bool`, `next() -> void`, `previous() -> void`, `setMuted(bool) -> void`, and `tick() -> void` drive playback.
 
 - [ ] Write media catalog tests for matching pairs, missing audio/video, duplicate names, invalid paths, empty channel folders, and random selection; run them and confirm they fail before implementation.
-- [ ] Implement local catalog scanning under `/Videos/`; accept only normalized paths below `/Videos/` and reject traversal components.
-- [ ] Implement `MediaSource` over the verified mounted filesystem using a fixed bounded read buffer; close both media streams on every failure path.
+- [x] Implement local catalog scanning under `/Videos/`; accept only numeric channel folders and optional `random`, paired `.mjpeg`/`.mp3` files, and bounded catalog capacity.
+- [x] Implement `MediaSource` over an injected filesystem using reads capped to 4096 bytes and reject traversal paths. The caller still cannot obtain a filesystem until compatibility is resolved.
 - [ ] Configure GPIO4/5 ES8311 control and GPIO6/11/12/13/14 I2S from the existing AIPI Lite register evidence; keep GPIO9 amplifier disabled until codec init succeeds and disable it on every exit.
 - [ ] Decode MJPEG frames to the 128 x 128 display and MP3 audio through ES8311, keeping decode/read buffers in PSRAM where supported; use GPIO42 short/double/long events for channel navigation and mute.
-- [ ] Run host catalog tests and firmware build; on physical hardware verify one prepared local MJPEG/MP3 pair, visible error behavior, and audible output before marking playback complete.
-- [ ] Document the exact media conversion commands, folder structure, and manual recovery path in `README.md` and `docs/RECOVERY.md`; commit as `feat: play local media on AI-PI Lite`.
+- [ ] Run host catalog tests and firmware build; on physical hardware verify one prepared local MJPEG/MP3 pair, visible error behavior, and audible output before marking playback complete. Tests and device playback were not run in this turn.
+- [x] Document the media folder structure and relay requirement in `README.md`; media conversion commands and recovery steps remain pending. Commit the local scan/read layer.
 
 **Acceptance:** Host tests pass and the firmware build succeeds. Local playback is considered hardware-verified only after the device displays frames and produces audible output without filesystem damage.
 

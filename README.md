@@ -8,9 +8,9 @@ to remain on the MicroPython data drive.
 ## Current implementation status
 
 The firmware currently contains an AI-PI Lite profile, display status layer,
-GPIO42 button handling, a bounded version 1 playlist parser, and an accessible
-dashboard page shell. Playback, audio, Wi-Fi streaming, and dashboard API routes
-are not implemented yet.
+GPIO42 button handling, bounded local media and playlist readers, and an
+accessible dashboard page shell. MJPEG/MP3 playback, audio output, Wi-Fi
+streaming, and dashboard API routes are not implemented yet.
 The current partition table, filesystem type, and native mount compatibility
 are unknown. The firmware therefore does not mount, format, erase, migrate, or
 write the MicroPython data drive. See [filesystem compatibility](docs/COMPATIBILITY.md)
