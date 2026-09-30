@@ -6,7 +6,7 @@
 
 **Architecture:** Build a native ESP32-S3 application with separate AIPI Lite hardware, filesystem, media-source, playback, playlist, and web-management modules. First establish safe read-only access to the current MicroPython data partition; add writes only after a verified compatible mount is demonstrated. Deliver local playback before HTTP streaming, management pages, and maintenance functions.
 
-**Tech Stack:** ESP32-S3 Arduino core 2.0.17 as used by the upstream firmware; C++ firmware; proposed production dependencies Arduino_GFX 1.6.0, JPEGDEC 1.8.4, minimp3 at a reviewed commit, and ArduinoJson 7.4.3 (pending user approval); ESP-IDF filesystem support only if verified compatible with the MicroPython partition; host-side C++ tests plus Python standard-library tests for web-asset accessibility.
+**Tech Stack:** ESP32-S3 Arduino core 2.0.17 as used by the upstream firmware; C++ firmware; user-approved production dependencies Arduino_GFX 1.6.0, JPEGDEC 1.8.4, minimp3 at a reviewed commit, and ArduinoJson 7.4.3; ESP-IDF filesystem support only if verified compatible with the MicroPython partition; host-side C++ tests plus Python standard-library tests for web-asset accessibility.
 
 **Spec:** `docs/superpowers/specs/2026-09-30-aipi-lite-minitv-design.md`
 
@@ -76,9 +76,9 @@
 - [x] Identify which capabilities come from the Arduino/ESP32 core and which require standalone libraries.
 - [x] Record the source, license, target notes, and exact pin proposed for each library.
 - [x] Add the exact proposed production list to `docs/DEPENDENCIES.md`; do not add package declarations, downloads, or vendored code yet.
-- [ ] Obtain user approval for the concrete dependency list before proceeding to dependency-adding work.
+- [x] Obtain user approval for the concrete dependency list before proceeding to dependency-adding work.
 
-**Acceptance:** The user has approved the exact production dependencies and versions before any is added to a manifest or firmware build.
+**Acceptance:** The user has approved the exact production dependencies and versions before any is added to a manifest or firmware build. User approval recorded 2026-09-30; no third-party code downloaded or vendored yet.
 
 ### Task 3: Create a reproducible ESP32-S3 build scaffold
 
@@ -92,11 +92,11 @@
 - `aipi_lite_profile.h` exports `constexpr` constants for all approved display, button, and codec pins and a `kProfileName` string equal to `"AIPI_LITE_XY006PL01"`.
 - `MiniTV.ino` provides `setup()` and `loop()` and must not initialize GPIO10.
 
-- [ ] Add the selected Arduino CLI/IDE build instructions and an ESP32-S3 target configuration, preserving the partition layout established in Task 1.
-- [ ] Add the approved library manifest entries with exact versions; if Task 2 approval has not been received, leave dependency declarations out and stop before compiling firmware.
-- [ ] Add `aipi_lite_profile.h` with GPIO3, GPIO4, GPIO5, GPIO6, GPIO7, GPIO9, GPIO11, GPIO12, GPIO13, GPIO14, GPIO15, GPIO16, GPIO17, GPIO18, and GPIO42 constants from the spec.
-- [ ] Add a safe boot in `setup()` that initializes serial diagnostics only and keeps GPIO10 untouched; keep `loop()` idle until later tasks add components.
-- [ ] Build the empty ESP32-S3 sketch using the pinned toolchain and confirm the selected partition CSV is the verified one; commit as `build: scaffold AI-PI Lite MiniTV firmware`.
+- [x] Add Arduino IDE setup notes and a provisional ESP32-S3 target configuration. Partition selection remains blocked on the actual device's filesystem evidence.
+- [x] Record the approved exact library versions in the build notes; no package manifest applies to this Arduino IDE sketch and no third-party source has been downloaded or vendored.
+- [x] Add `aipi_lite_profile.h` with the display, codec, speaker, and button constants from the spec.
+- [x] Add a safe boot in `setup()` that initializes serial diagnostics only and keeps GPIO10 untouched; keep `loop()` idle until later tasks add components.
+- [ ] Build the empty ESP32-S3 sketch using the pinned toolchain and confirm the selected partition CSV is the verified one; commit as `build: scaffold AI-PI Lite MiniTV firmware`. Blocked: no Arduino build tool is installed, and the device partition map remains unknown.
 
 **Acceptance:** The source builds for ESP32-S3 without a CYD profile, uses the verified partition CSV, and does not contain GPIO10 writes.
 

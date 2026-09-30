@@ -1,7 +1,8 @@
 # Proposed MiniTV Production Dependencies
 
-**Approval status:** Awaiting user approval. No production packages or source
-code have been added to this repository.
+**Approval status:** The user approved the exact proposed set on 2026-09-30.
+The dependency versions are recorded in the firmware build notes. No external
+package code has been downloaded or vendored in this repository.
 
 The upstream MiniTV uses the classic ESP32 CYD. The versions below are a
 reviewed proposal for an ESP32-S3 port; they still require build and physical
@@ -36,10 +37,8 @@ The following are not proposed as separately installed production libraries:
 - Host-side tests should use the repository's existing compiler and Python
   standard library; no test-only production dependency is proposed.
 
-## Approval request
+## Approval record
 
-Please approve or revise this exact production set before it is added to a
-firmware manifest or build. Approval covers only the listed versions and
-licenses. It does not establish filesystem compatibility or hardware
-performance. No library declaration, download, vendoring, or installation has
-been made.
+Approval covers only the listed versions and licenses. It does not establish
+filesystem compatibility or hardware performance. Arduino library
+installation/build and device playback remain unverified.
