@@ -152,11 +152,12 @@ accessibility criteria; do not claim certification without a formal audit.
 - [DynaMight1124's MiniTV-Video-Converter](https://github.com/DynaMight1124/MiniTV-Video-Converter)
   is a desktop media-preparation reference that converts common source video
   files into MiniTV-style channel folders and paired assets, with screen and
-  audio-format options. Its presets are not established for the AI-PI Lite's
-  128 x 128 display or 16 kHz codec path; define and verify a target profile
-  before documenting recommended encodings. Its YouTube URL input is a
-  conversion workflow, not evidence that the device can play YouTube watch
-  pages directly.
+  audio-format options; its README also describes conversion from a YouTube
+  URL. Desktop conversion is an accepted media-preparation workflow: transfer
+  the resulting files to the AI-PI Lite for local playback. Its presets are
+  not established for the AI-PI Lite's 128 x 128 display or 16 kHz codec path;
+  define and verify a target profile before documenting recommended encodings.
+  A YouTube watch URL remains unsupported as a direct device playlist stream.
 - AIPI Lite pins and component assumptions come from the supplied
   `SPEC.md` and existing AI-PI Lite firmware sources.
 
