@@ -195,9 +195,10 @@
 - `PlaylistEntry` has `id`, `title`, `sourceKind`, `videoLocation`, and `audioLocation` fields; `sourceKind` is exactly `"file"` or `"http"`.
 - `HttpMediaSource::open(const char* url) -> bool`, `read(uint8_t* output, size_t capacity) -> int`, and `close() -> void` use the same source contract as local files.
 
-- [ ] Define and document version 1 JSON with root keys `version` and `channels`; each channel has `id`, `title`, `source`, `video`, and `audio`.
+- [x] Define and document version 1 JSON with root keys `version` and `channels`; each channel has `id`, `title`, `source`, `video`, and `audio`.
 - [ ] Add test fixtures for valid local/network entries, invalid JSON, wrong version, missing fields, duplicate IDs, oversized input, unsupported schemes, traversal paths, and unsupported file extensions; confirm failures before implementing the parser.
-- [ ] Implement bounded parsing with exact input/entry/string limits and reject anything outside `/Videos/` for local media or `http://`/`https://` URLs for network media.
+- [x] Implement bounded parsing with an exact 4096-byte input limit, 32-entry limit, ID/title/path/URL limits, and reject anything outside `/Videos/` for local media or direct `http://`/`https://` MJPEG/MP3 URLs for network media.
+- [ ] Add and run host playlist tests for malformed, oversized, unsupported, and unsafe inputs. Tests were not added or run in this turn.
 - [ ] Implement HTTP(S) reads with redirect limits, timeouts, response-size caps, content-type checks, stream cancellation, and diagnostics; never disable TLS certificate validation.
 - [ ] Connect network loss and decode failures to explicit playback status and retry only after a fresh user playback request.
 - [ ] Run host playlist tests and build; document direct media URL requirements and the PC relay requirement for YouTube/SMB/NFS sources; commit as `feat: stream playlist media over Wi-Fi`.
