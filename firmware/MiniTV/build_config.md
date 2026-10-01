@@ -25,9 +25,22 @@ access the existing MicroPython data drive until the actual device partition
 table and filesystem have been read and recorded in
 [`docs/COMPATIBILITY.md`](../../docs/COMPATIBILITY.md).
 
-This scaffold does not define a partition CSV, invoke a filesystem library,
-flash firmware, or access media. Build and device upload remain unverified;
-`arduino-cli` and PlatformIO are not installed in the current environment.
+The repository installer is `tools/install_firmware.sh`. It installs the
+pinned Arduino core and libraries into the local `arduino-cli` environment and
+builds this sketch. The default FQBN targets the ESP32-S3 with 16 MB flash and
+Octal PSRAM. Set `AIPI_LITE_FQBN` if the installed core exposes different board
+menu option names.
+
+The installer builds without touching a connected device. Upload is blocked
+unless `--upload --allow-unverified-partition-table` is supplied. Arduino
+upload can write a partition table, and this repository has not established
+that the selected table preserves the installed MicroPython data partition.
+Do not use the override until you have inspected the exact device partition
+map, backed up its data, and confirmed a recovery path. The script does not
+request a full-chip erase or format a filesystem. See
+[`docs/COMPATIBILITY.md`](../../docs/COMPATIBILITY.md). Build and device upload
+remain unverified; `arduino-cli` and PlatformIO are not installed in the
+current environment.
 
 ## Sketch layout
 

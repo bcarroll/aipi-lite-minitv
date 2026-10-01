@@ -165,6 +165,33 @@ docker run --rm `
 Add FFmpeg or yt-dlp only to the Dockerfile or requirements file when changing
 the pinned image environment.
 
+### Firmware installation
+
+On the machine connected to the AI-PI Lite, install Arduino CLI and run the
+firmware installer from the cloned repository:
+
+```sh
+tools/install_firmware.sh
+```
+
+This installs the pinned Arduino-ESP32 2.0.17 core and the sketch's pinned
+Arduino libraries in the local Arduino CLI environment, then compiles the
+firmware. To upload, provide the serial port and the explicit partition-table
+override:
+
+```sh
+tools/install_firmware.sh --upload --port /dev/ttyACM0 \
+  --allow-unverified-partition-table
+```
+
+**Do not upload with that override until the device's partition map and data
+backup are verified.** The installed partition table is unknown, and Arduino
+upload may replace it. The current firmware does not mount or format storage,
+but changing the partition table can still make the existing MicroPython data
+unavailable. Follow [filesystem compatibility](docs/COMPATIBILITY.md) and the
+[firmware build notes](firmware/MiniTV/build_config.md) first. The script does
+not perform a full-chip erase.
+
 ## Verification status
 
 The converter passed a Python syntax compilation check and `git diff --check`.
