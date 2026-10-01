@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-readonly REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
-readonly SKETCH_DIR="${REPO_ROOT}/firmware/MiniTV"
-readonly FQBN="${AIPI_LITE_FQBN:-esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=default_16MB}"
-readonly CORE_VERSION="2.0.17"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SKETCH_DIR="${REPO_ROOT}/firmware/MiniTV"
+FQBN="${AIPI_LITE_FQBN:-esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=default_16MB}"
+CORE_VERSION="2.0.17"
 
 upload=false
 allow_partition_change=false
@@ -39,11 +39,11 @@ die() {
   exit 2
 }
 
-while (($#)); do
+while [ "$#" -gt 0 ]; do
   case "$1" in
     --upload) upload=true ;;
     --port)
-      (($# >= 2)) || die "--port requires a value"
+      [ "$#" -ge 2 ] || die "--port requires a value"
       port="$2"
       shift
       ;;
@@ -54,10 +54,10 @@ while (($#)); do
   shift
 done
 
-if [[ "$allow_partition_change" == true && "$upload" != true ]]; then
+if [ "$allow_partition_change" = true ] && [ "$upload" != true ]; then
   die "--allow-unverified-partition-table only applies with --upload"
 fi
-if [[ "$upload" == true && "$allow_partition_change" != true ]]; then
+if [ "$upload" = true ] && [ "$allow_partition_change" != true ]; then
   die "upload blocked: verify the device partition table and data backup first, then pass --allow-unverified-partition-table"
 fi
 
@@ -75,14 +75,15 @@ trap 'rm -rf "$build_dir"' EXIT
 
 "$arduino_cli" compile --fqbn "$FQBN" --build-path "$build_dir" "$SKETCH_DIR"
 
-if [[ "$upload" == true ]]; then
-  upload_args=(upload --fqbn "$FQBN")
-  [[ -z "$port" ]] || upload_args+=(--port "$port")
-  upload_args+=("$SKETCH_DIR")
-  "$arduino_cli" "${upload_args[@]}"
+if [ "$upload" = true ]; then
+  if [ -z "$port" ]; then
+    "$arduino_cli" upload --fqbn "$FQBN" "$SKETCH_DIR"
+  else
+    "$arduino_cli" upload --fqbn "$FQBN" --port "$port" "$SKETCH_DIR"
+  fi
 fi
 
 printf 'Firmware build completed successfully.\n'
-if [[ "$upload" != true ]]; then
+if [ "$upload" != true ]; then
   printf 'No device was changed. To upload, first verify the partition table and back up device data; see docs/COMPATIBILITY.md.\n'
 fi
