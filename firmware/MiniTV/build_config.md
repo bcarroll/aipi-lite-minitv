@@ -28,8 +28,10 @@ table and filesystem have been read and recorded in
 The repository installer is `tools/install_firmware.sh`. It installs the
 pinned Arduino core and libraries into the local `arduino-cli` environment and
 builds this sketch. The default FQBN targets the ESP32-S3 with 16 MB flash and
-Octal PSRAM. Set `AIPI_LITE_FQBN` if the installed core exposes different board
-menu option names.
+Octal PSRAM. It leaves the partition scheme at the core default because the
+device's existing partition table is unknown; do not select a different
+scheme until the device has been inspected. Set `AIPI_LITE_FQBN` if the
+installed core exposes different board menu option names.
 
 The installer builds without touching a connected device. Upload is blocked
 unless `--upload --allow-unverified-partition-table` is supplied. Arduino

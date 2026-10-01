@@ -4,7 +4,9 @@ set -eu
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SKETCH_DIR="${REPO_ROOT}/firmware/MiniTV"
-FQBN="${AIPI_LITE_FQBN:-esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=default_16MB}"
+# Leave PartitionScheme unspecified: core 2.0.17 has no default_16MB option,
+# and the device's existing partition table is unknown.
+FQBN="${AIPI_LITE_FQBN:-esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi}"
 CORE_VERSION="2.0.17"
 
 upload=false
