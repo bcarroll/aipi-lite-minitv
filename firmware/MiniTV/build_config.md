@@ -6,7 +6,7 @@ The user approved the exact dependency set recorded in
 [`docs/DEPENDENCIES.md`](../../docs/DEPENDENCIES.md):
 
 - Arduino-ESP32 core 2.0.17
-- Arduino_GFX 1.6.0
+- GFX Library for Arduino (Arduino_GFX) 1.6.0
 - JPEGDEC 1.8.4
 - minimp3 commit `ea99364f61c14656440e8d77e9c233ccf3124633`
 - ArduinoJson 7.4.3

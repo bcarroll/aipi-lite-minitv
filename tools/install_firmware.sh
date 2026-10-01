@@ -66,7 +66,7 @@ command -v "$arduino_cli" >/dev/null 2>&1 || die "arduino-cli was not found; ins
 
 "$arduino_cli" core update-index
 "$arduino_cli" core install "esp32:esp32@${CORE_VERSION}"
-"$arduino_cli" lib install "Arduino_GFX@1.6.0"
+"$arduino_cli" lib install "GFX Library for Arduino@1.6.0"
 "$arduino_cli" lib install "JPEGDEC@1.8.4"
 "$arduino_cli" lib install "ArduinoJson@7.4.3"
 
